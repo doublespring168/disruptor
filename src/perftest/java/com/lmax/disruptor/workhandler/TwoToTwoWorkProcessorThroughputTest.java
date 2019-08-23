@@ -27,8 +27,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.locks.LockSupport;
 
-import static com.lmax.disruptor.RingBuffer.createMultiProducer;
-
 /**
  * <pre>
  * Sequence a series of events from multiple publishers going to multiple work processors.
@@ -58,13 +56,13 @@ public final class TwoToTwoWorkProcessorThroughputTest extends AbstractPerfTestD
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
     private final RingBuffer<ValueEvent> ringBuffer =
-            createMultiProducer(ValueEvent.EVENT_FACTORY, BUFFER_SIZE, new BusySpinWaitStrategy());
+            RingBuffer.createMultiProducer(ValueEvent.EVENT_FACTORY, BUFFER_SIZE, new BusySpinWaitStrategy());
 
     private final SequenceBarrier sequenceBarrier = ringBuffer.newBarrier();
     private final Sequence workSequence = new Sequence(-1);
 
     private final ValueAdditionWorkHandler[] handlers = new ValueAdditionWorkHandler[2];
-    @SuppressWarnings("unchecked")
+
     private final WorkProcessor<ValueEvent>[] workProcessors = new WorkProcessor[2];
     private final ValuePublisher[] valuePublishers = new ValuePublisher[NUM_PUBLISHERS];
 
