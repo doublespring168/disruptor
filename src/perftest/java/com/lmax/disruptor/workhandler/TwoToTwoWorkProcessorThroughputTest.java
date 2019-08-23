@@ -64,14 +64,14 @@ public final class TwoToTwoWorkProcessorThroughputTest extends AbstractPerfTestD
     private final Sequence workSequence = new Sequence(-1);
 
     private final ValueAdditionWorkHandler[] handlers = new ValueAdditionWorkHandler[2];
+    @SuppressWarnings("unchecked")
+    private final WorkProcessor<ValueEvent>[] workProcessors = new WorkProcessor[2];
+    private final ValuePublisher[] valuePublishers = new ValuePublisher[NUM_PUBLISHERS];
 
     {
         handlers[0] = new ValueAdditionWorkHandler();
         handlers[1] = new ValueAdditionWorkHandler();
     }
-
-    @SuppressWarnings("unchecked")
-    private final WorkProcessor<ValueEvent>[] workProcessors = new WorkProcessor[2];
 
     {
         workProcessors[0] = new WorkProcessor<ValueEvent>(
@@ -84,8 +84,6 @@ public final class TwoToTwoWorkProcessorThroughputTest extends AbstractPerfTestD
                 workSequence);
     }
 
-    private final ValuePublisher[] valuePublishers = new ValuePublisher[NUM_PUBLISHERS];
-
     {
         for (int i = 0; i < NUM_PUBLISHERS; i++) {
             valuePublishers[i] = new ValuePublisher(cyclicBarrier, ringBuffer, ITERATIONS);
@@ -95,6 +93,10 @@ public final class TwoToTwoWorkProcessorThroughputTest extends AbstractPerfTestD
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static void main(String[] args) throws Exception {
+        new TwoToTwoWorkProcessorThroughputTest().testImplementations();
+    }
 
     @Override
     protected int getRequiredProcessorCount() {
@@ -134,9 +136,5 @@ public final class TwoToTwoWorkProcessorThroughputTest extends AbstractPerfTestD
         }
 
         return perfTestContext;
-    }
-
-    public static void main(String[] args) throws Exception {
-        new TwoToTwoWorkProcessorThroughputTest().testImplementations();
     }
 }
